@@ -23,7 +23,7 @@ export default function Places() {
           </button>
         </Link>
       )}
-      {type === "new" && <CreatePlaceForm/>}
+      {type === "new" && <CreatePlaceForm />}
     </div>
   );
 }
