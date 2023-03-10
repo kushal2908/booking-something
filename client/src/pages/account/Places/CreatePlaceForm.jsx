@@ -1,12 +1,14 @@
 import axios from "axios";
 import React, { useState } from "react";
 import Perks from "./Perks";
+import PhotosUploader from "./PhotosUploader";
+import { useNavigate } from "react-router-dom";
 
 export default function CreatePlaceForm() {
+  let navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [address, setAddress] = useState("");
   const [addedPhotos, setAddedPhotos] = useState([]);
-  const [photoLink, setPhotoLink] = useState("");
   const [description, setDescription] = useState("");
   const [perks, setPerks] = useState([]);
   const [extraInfo, setExtraInfo] = useState("");
@@ -23,36 +25,29 @@ export default function CreatePlaceForm() {
     );
   };
 
-  const addPhotoByLink = async (e) => {
+  const addNewPlace = async (e) => {
     e.preventDefault();
-    let { data: filename } = await axios.post("/upload-photo-by-link", { link: photoLink });
-    setAddedPhotos((prev) => {
-      return [...prev, filename];
-    });
-    setPhotoLink("");
-  };
-
-  const uploadPhotos = (e) => {
-    const files = e.target.files;
-    const data = new FormData();
-    for (let i = 0; i < files.length; i++) {
-      data.append("photos", files[i]);
+    const place_data = {
+      title,
+      address,
+      photos: addedPhotos,
+      description,
+      perks,
+      extra_info: extraInfo,
+      check_in,
+      check_out,
+      max_guest,
+    };
+    try {
+      let res = axios.post("/add-place", place_data);
+      navigate("/account/places");
+    } catch (err) {
+      console.log(err);
     }
-    axios
-      .post("/upload-photos", data, {
-        headers: { "Content-type": "multipart/form-data" },
-      })
-      .then((response) => {
-        const { data: filenames } = response;
-        console.log(filenames);
-        setAddedPhotos((prev) => {
-          return [...prev, ...filenames];
-        });
-      });
   };
   return (
     <div>
-      <form>
+      <form onSubmit={addNewPlace}>
         <div className="mb-4">
           <PreInput header={"Name of your place"} desc={"Name of your place, should be catchy"} />
           <input
@@ -76,49 +71,8 @@ export default function CreatePlaceForm() {
             }}
           />
         </div>
-        <div className="mb-4">
-          <h2 className="text-xl font-medium">Photos</h2>
-          <p className="text-sm text-gray-500">The more the better.</p>
-          <div className="flex items-center gap-2 ">
-            <input
-              type="text"
-              placeholder="Add photos using link e.g: something.jpg"
-              value={photoLink}
-              onChange={(e) => {
-                setPhotoLink(e.target.value);
-              }}
-            />
-            <button className="font-medium text-sm" onClick={addPhotoByLink}>
-              Add&nbsp;Photo
-            </button>
-          </div>
-          <div className="grid grid-cols-3 lg:grid-cols-4 lg:grid-cols-6 gap-2 mt-2">
-            {addedPhotos?.length > 0 &&
-              addedPhotos?.map((d) => (
-                <div className="">
-                  <img className="rounded h-full object-cover" src={import.meta.env.VITE_MEDIA_URL + d} alt={d} />
-                </div>
-              ))}
-            <label className="hover:bg-gray-100 md:max-w-xs flex justify-center items-center gap-1 border bg-transparent rounded font-medium text-gray-600 cursor-pointer">
-              <input type="file" multiple className="hidden" onChange={uploadPhotos} />
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-8 h-8"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"
-                />
-              </svg>
-              Upload
-            </label>
-          </div>
-        </div>
+        <PhotosUploader addedPhotos={addedPhotos} onChange={setAddedPhotos} />
+
         <div className="mb-4">
           <PreInput header={"Description"} desc={"Describe about your place"} />
           <textarea
@@ -178,7 +132,9 @@ export default function CreatePlaceForm() {
           </div>
         </div>
         <div className="mb-4 w-full">
-          <button className="primary font-medium">Save</button>
+          <button type="type" className="primary font-medium">
+            Save
+          </button>
         </div>
       </form>
     </div>

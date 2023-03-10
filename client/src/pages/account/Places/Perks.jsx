@@ -1,10 +1,18 @@
 import React from "react";
 
 export default function Perks({ selected, onChange }) {
+  const handleClick = (e) => {
+    const { checked, name } = e.target;
+    if (checked) {
+      onChange([...selected, name]);
+    } else {
+      onChange([...selected.filter((selectedName) => selectedName !== name)]);
+    }
+  };
   return (
     <div className="grid gap-2 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mt-2">
-      <label className="border p-4 gap-2 flex rounded gap-2 cursor-pointer">
-        <input type="checkbox" />
+      <label className="border p-4 flex rounded gap-2 cursor-pointer">
+        <input type="checkbox" name="wifi" onChange={handleClick} />
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -22,8 +30,8 @@ export default function Perks({ selected, onChange }) {
 
         <span>WiFi</span>
       </label>
-      <label className="border p-4 gap-2 flex rounded gap-2 cursor-pointer">
-        <input type="checkbox" />
+      <label className="border p-4  flex rounded gap-2 cursor-pointer">
+        <input type="checkbox" name="free-parking" onChange={handleClick} />
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -41,8 +49,8 @@ export default function Perks({ selected, onChange }) {
 
         <span>Free Parking</span>
       </label>
-      <label className="border p-4 gap-2 flex rounded gap-2 cursor-pointer">
-        <input type="checkbox" />
+      <label className="border p-4  flex rounded gap-2 cursor-pointer">
+        <input type="checkbox" name="tv" onChange={handleClick} />
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -59,8 +67,8 @@ export default function Perks({ selected, onChange }) {
         </svg>
         <span>TV</span>
       </label>
-      <label className="border p-4 gap-2 flex rounded gap-2 cursor-pointer">
-        <input type="checkbox" />
+      <label className="border p-4  flex rounded gap-2 cursor-pointer">
+        <input type="checkbox" name="radio" onChange={handleClick} />
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -77,8 +85,8 @@ export default function Perks({ selected, onChange }) {
         </svg>
         <span>Radio</span>
       </label>
-      <label className="border p-4 gap-2 flex rounded gap-2 cursor-pointer">
-        <input type="checkbox" />
+      <label className="border p-4 flex rounded gap-2 cursor-pointer">
+        <input type="checkbox" name="pets" onChange={handleClick} />
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -96,8 +104,8 @@ export default function Perks({ selected, onChange }) {
 
         <span>Pets</span>
       </label>
-      <label className="border p-4 gap-2 flex rounded gap-2 cursor-pointer">
-        <input type="checkbox" />
+      <label className="border p-4  flex rounded gap-2 cursor-pointer">
+        <input type="checkbox" name="entrance" onChange={handleClick} />
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"

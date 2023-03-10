@@ -5,6 +5,7 @@ const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const { mongoose } = require("mongoose");
 const User = require("./models/user/User");
+const Place = require("./models/place/Place");
 const cookieParser = require("cookie-parser");
 const download = require("image-downloader");
 const multer = require("multer");
@@ -119,6 +120,33 @@ app.post("/upload-photos", upload.array("photos", 100), (req, res) => {
     uploadedFiles.push(newPath.replace("uploads\\", ""));
   }
   res.json(uploadedFiles);
+});
+
+app.post("/add-place", async (req, res) => {
+  const { token } = req.cookies;
+  const { title, address, photos, description, perks, extra_info, check_in, check_out, max_guest } = req.body;
+  try {
+    jwt.verify(token, jwtSecret, {}, async (err, user) => {
+      if (err) throw err;
+      let placeDoc = await Place.create({
+        owner: user?.id,
+        title,
+        address,
+        photos,
+        description,
+        perks,
+        extra_info,
+        check_in,
+        check_out,
+        max_guest,
+      });
+      res.json({ message: "Place created successfully" });
+    });
+  } catch (err) {
+    res.status(400).json({
+      message: "Error! Creating Place",
+    });
+  }
 });
 
 app.post("/logout", (req, res) => {
