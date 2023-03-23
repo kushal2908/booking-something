@@ -15,5 +15,5 @@ button {
 }
 
 button.primary {
-  @apply bg-primary py-2 text-white w-full;
+  @apply bg-primary py-2 text-white;
 }

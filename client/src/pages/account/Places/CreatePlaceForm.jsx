@@ -1,11 +1,14 @@
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import React, { useState } from "react";
 import Perks from "./Perks";
 import PhotosUploader from "./PhotosUploader";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import AccountNavigation from "../AccountNavigation";
 
 export default function CreatePlaceForm() {
   let navigate = useNavigate();
+  let { id } = useParams();
+  console.log(id);
   const [title, setTitle] = useState("");
   const [address, setAddress] = useState("");
   const [addedPhotos, setAddedPhotos] = useState([]);
@@ -45,9 +48,20 @@ export default function CreatePlaceForm() {
       console.log(err);
     }
   };
+
+  useEffect(() => {
+    if (!id) return;
+    axios
+      .get("/places/" + id)
+      .then(() => {})
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [id]);
   return (
-    <div>
-      <form onSubmit={addNewPlace}>
+    <div className="mt-8 w-full md:w-2/3 mx-auto">
+      <AccountNavigation />
+      <form onSubmit={addNewPlace} className="mt-8">
         <div className="mb-4">
           <PreInput header={"Name of your place"} desc={"Name of your place, should be catchy"} />
           <input
@@ -120,7 +134,7 @@ export default function CreatePlaceForm() {
             />
           </div>
           <div className="mb-4">
-            <PreInput header={"Number of guest"} desc={"Number of people you are bringing in, including you"} />
+            <PreInput header={"Number of guest"} desc={"Total guests including you"} />
             <input
               type="number"
               min={1}
@@ -132,7 +146,7 @@ export default function CreatePlaceForm() {
           </div>
         </div>
         <div className="mb-4 w-full">
-          <button type="type" className="primary font-medium">
+          <button type="type" className="primary w-full md:w-1/2 font-medium">
             Save
           </button>
         </div>

@@ -50,7 +50,7 @@ export default function LoginPage() {
             }}
             value={password}
           />
-          <button type="submit" className="primary">
+          <button type="submit" className="primary w-full">
             Login
           </button>
         </form>

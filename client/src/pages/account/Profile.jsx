@@ -16,11 +16,13 @@ export default function Profile() {
     }
   };
   return (
-    <div className="mx-auto">
+    <div className="">
       <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint, temporibus soluta? Veritatis?</p>
-      <button className="primary mt-2 max-w-sm" onClick={logout}>
-        Logout
-      </button>
+      <div className="text-left mt-4">
+        <button className="primary w-1/4" onClick={logout}>
+          Logout
+        </button>
+      </div>
     </div>
   );
 }

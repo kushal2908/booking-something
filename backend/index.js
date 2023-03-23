@@ -149,6 +149,26 @@ app.post("/add-place", async (req, res) => {
   }
 });
 
+app.get("/places", async (req, res) => {
+  const { token } = req.cookies;
+  if (token) {
+    jwt.verify(token, jwtSecret, {}, async (err, user) => {
+      if (err) throw err;
+      const { id } = user;
+      let places = await Place.find({ owner: id });
+      res.json(places);
+    });
+  } else {
+    res.status(400).json({ message: "Error!" });
+  }
+});
+
+app.get("/places/:id", async (req, res) => {
+  const { id } = req.params;
+  let places = await Place.find({ _id: id });
+  res.json(places);
+});
+
 app.post("/logout", (req, res) => {
   res.cookie("token", "").json("Logout successful");
 });
